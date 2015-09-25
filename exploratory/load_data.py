@@ -35,16 +35,45 @@ def _remove_leading_space(df):
 
 
 
+
+def turn_binary(serie, true_value, false_value):
+    """Return a pandas series converting two values into boolean
+
+    Parameters:
+    ----------
+    serie: pd.series
+
+    true_value: object
+        value to be converted as True
+
+    false_value: object
+        value to be converted as False
+    """
+
+    serie.replace(to_replace=true_value, value=True, inplace=True)
+    serie.replace(to_replace=false_value, value=False, inplace=True)
+    return serie
+
+
+
 def _clean(df):
     """Return a cleaned version of data frame
 
     """
 
     df.replace(to_replace="Not in universe", value=UNKNOWN, inplace=True)
-    df[PREDICTION_COLNAME].replace(to_replace="- 50000.", value=False, inplace=True)
-    df[PREDICTION_COLNAME].replace(to_replace="50000+.", value=True, inplace=True)
+    df.replace(to_replace="?", value=UNKNOWN, inplace=True)
+    df[PREDICTION_COLNAME] = turn_binary(df[PREDICTION_COLNAME], "- 50000.", "50000+.")
+    df["fill inc questionnaire for veteran's admin"] = turn_binary(df["fill inc questionnaire for veteran's admin"], "Yes", "No")
+    df["member of a labor union"] = turn_binary(df["member of a labor union"], "Yes", "No")
+    df["migration prev res in sunbelt"] = turn_binary(df["migration prev res in sunbelt"], "Yes", "No")
+    df["sex"] = turn_binary(df["sex"], "Male", "Female")
+    df["year"] = turn_binary(df["year"], 94, 95)
+
     ##add more clean up here
     return df
+
+
 
 def prepare_dataframe(training_file, metadata_file=False, **kwargs):
     """Return a data frame with cleaned column name
