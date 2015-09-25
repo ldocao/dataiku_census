@@ -10,6 +10,3 @@ metadata_file = "../data/census_income_metadata.txt"
 result = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
 
 
-for c in result.columns.values:
-    print result[c]
-    ipdb.set_trace()

@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import utils
+from constants import *
 import ipdb
 
 
@@ -28,6 +29,20 @@ def generate_colname(metadata_file):
 
 
 
+def _remove_leading_space(df):
+    """Return the data frame after removing leading spaces for all elements"""
+    return df.replace(to_replace="^\s",value="",regex=True)
+
+
+
+def _clean(df):
+    """Return a cleaned version of data frame
+
+    """
+
+    df.replace(to_replace=" Not in universe", value=UNKNOWN, inplace=True)
+    ##add more clean up here
+    return df
 
 def prepare_dataframe(training_file, metadata_file=False, **kwargs):
     """Return a data frame with cleaned column name
@@ -45,12 +60,21 @@ def prepare_dataframe(training_file, metadata_file=False, **kwargs):
     """
 
 
+    ## generate column names
     if metadata_file:
         colnames = generate_colname(metadata_file)
     else:
         colnames = None
 
-    return pd.read_csv(training_file, names=colnames)
+    ## load data frame
+    df = pd.read_csv(training_file, names=colnames)
+
+    ## clean up
+    df = _remove_leading_space(df)
+    df = _clean(df)
+
+    return df
+
 
 
 
