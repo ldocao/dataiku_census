@@ -23,7 +23,7 @@ def generate_colname(metadata_file):
     metadata = pd.read_csv(metadata_file, comment="|", sep=":", names=["names","values"])
     names = metadata["names"].tolist()
     names.pop(0) #remove first dummy element
-    names.append("incomes classification") #add what we want to predict
+    names.append(PREDICTION_COLNAME) #add what we want to predict
     return names
 
 
@@ -40,7 +40,9 @@ def _clean(df):
 
     """
 
-    df.replace(to_replace=" Not in universe", value=UNKNOWN, inplace=True)
+    df.replace(to_replace="Not in universe", value=UNKNOWN, inplace=True)
+    df[PREDICTION_COLNAME].replace(to_replace="- 50000.", value=False, inplace=True)
+    df[PREDICTION_COLNAME].replace(to_replace="50000+.", value=True, inplace=True)
     ##add more clean up here
     return df
 
