@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 
 training_file = "../data/census_income_learn.csv"
 metadata_file = "../data/census_income_metadata.txt"
-
 df = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
 nrows = len(df)
 
