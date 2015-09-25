@@ -22,4 +22,4 @@ for c in df.columns.values:
     plt.xlim([0,nrows])
     plt.suptitle(c)
     plt.tight_layout()
-    plt.savefig("./figures/"+c+".pdf")
+    plt.savefig("./figures/histograms/"+c+".pdf")
