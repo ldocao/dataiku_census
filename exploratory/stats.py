@@ -1,11 +1,15 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-
+import load_data as ld
+import ipdb
 
 
 training_file = "../data/census_income_learn.csv"
-metadata_file = "../data/census_income_metadata_modified.txt"
+metadata_file = "../data/census_income_metadata.txt"
 
-df = pd.read_csv(training_file, nrows=1000)
-metadata = pd.read_csv(metadata_file, names=["class", "code"], sep='\t')
+result = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
+
+
+for c in result.columns.values:
+    print result[c]
+    ipdb.set_trace()
