@@ -41,6 +41,6 @@ def bias_population(df, ratio, seed=0):
     else:
         n_rows_selected = n_rows_false
 
-    df_false = utils.sample_random(df_false, n_rows_false)
+    df_false = utils.sample_random(df_false, n_rows_false, seed=seed)
 
-    return concat([df_true, df_false])
+    return pd.concat([df_true, df_false])
