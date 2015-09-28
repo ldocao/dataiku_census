@@ -91,7 +91,7 @@ def _clean(df):
 
 
     ## replace boolean
-    df[PREDICTION_COLNAME] = turn_binary(df[PREDICTION_COLNAME], "- 50000.", "50000+.")
+    df[PREDICTION_COLNAME] = turn_binary(df[PREDICTION_COLNAME], "50000+.", "- 50000.")
     df["fill inc questionnaire for veteran's admin"] = turn_binary(df["fill inc questionnaire for veteran's admin"], "Yes", "No")
     df["member of a labor union"] = turn_binary(df["member of a labor union"], "Yes", "No")
     df["migration prev res in sunbelt"] = turn_binary(df["migration prev res in sunbelt"], "Yes", "No")
