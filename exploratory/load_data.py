@@ -52,7 +52,7 @@ def turn_binary(serie, true_value, false_value):
 
     serie.replace(to_replace=true_value, value=True, inplace=True)
     serie.replace(to_replace=false_value, value=False, inplace=True)
-    return serie
+    return serie.astype(bool)
 
 
 
