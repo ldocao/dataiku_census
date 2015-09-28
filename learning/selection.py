@@ -2,7 +2,7 @@ import random
 import numpy as np
 import pandas as pd
 import utils
-
+from constants import *
 
 def bias_population(df, ratio, seed=0):
     """Return a biased sample of the dataframe.
@@ -26,8 +26,8 @@ def bias_population(df, ratio, seed=0):
     The number of lines for true is always maximised for a given ratio.
     """
 
-    true_selector = df[PREDICION_COLNAME].values == True
-    false_selector = df[PREDICION_COLNAME].values == False
+    true_selector = df[PREDICTION_COLNAME].values == True
+    false_selector = df[PREDICTION_COLNAME].values == False
 
     df_true = df[true_selector]
     df_false = df[false_selector]
