@@ -39,7 +39,7 @@ def machine_learning(df_train, df_valid, method=METHOD):
 def print_score(y_true, y_valid):
     confusion_score = confusion_matrix(y_true, y_valid)
     print confusion_score
-    print "Score summary: ", round(float(np.trace(confusion_score))/n_valid, 3)*100., "%"
+    print "Score summary: ", round(float(np.trace(confusion_score))/len(y_valid), 3)*100., "%"
     # read confusion matrix as follows:
     # (expected true, predicted true) (expected true, predicted false)
     # (expected false, predicted true) (expected false, predicted false)
@@ -54,7 +54,6 @@ df_train = feat.engineer_dataframe(df_train)
 df_valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
 df_valid = df_valid[["age", "education", "sex", "num persons worked for employer", PREDICTION_COLNAME]]
 df_valid = feat.dummify(df_valid, "education") 
-n_valid = len(df_valid) 
 
 
 ## LEARNING
