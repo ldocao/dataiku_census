@@ -24,8 +24,8 @@ def predict(df_training, df_validation):
     """
 
     cls = LogisticRegression() #define classifier
-    features = df.drop(PREDICTION_COLNAME, axis=1)
-    target = df[PREDICTION_COLNAME]
+    features = df_training.drop(PREDICTION_COLNAME, axis=1)
+    target = df_training[PREDICTION_COLNAME]
     cls.fit(features, target)
     predictions = cls.predict(df_validation)
     
