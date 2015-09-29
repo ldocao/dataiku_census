@@ -54,8 +54,8 @@ def drop_high_nan(df, threshold=0.5):
     freq_nans = n_nans/float(len(df)) #in percentage
     to_drop = (freq_nans > threshold).values
     columns_drop = df.columns.values[to_drop].tolist()
-    df.drop(columns_drop, inplace=True, axis=1)
-    return df
+    return df.drop(columns_drop, axis=1)
+    
 
 
 def dummify(df, colname):
@@ -70,15 +70,25 @@ def dummify(df, colname):
     """
 
     dummies = pd.get_dummies(df[colname])
-    dummies.drop(dummies.columns[0], axis=1, inplace=True) #remove arbitrarely the first column to avoid colinearity problem
+    #dummies.drop(dummies.columns[0], axis=1, inplace=True) #remove arbitrarely the first column to avoid colinearity problem
     df.drop(colname, inplace=True, axis=1)
     return pd.concat([df, dummies], axis=1)
 
+
+
+def dummify_all_categorical(df):
+    """Return a dataframe where every categorical variables have been dummified"""
+
+    df = pd.get_dummies(df)
+    df = dummify(df, ["detailed industry recode", "detailed occupation recode"]) ## add some variables that are encoded as int64 byt that are in fact categorical
+
+    return df
 
 def engineer_dataframe(df):
     """Return a dataframe engineered for machine learning"""
 
     df = bias_population(df, 5.)
+    #df = dummify_all_categorical(df)
     df = drop_high_nan(df)
 
     ## temporary sub selection
