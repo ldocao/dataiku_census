@@ -7,14 +7,27 @@ from constants import *
 
 
 
-def predict(df):
-    """Return prediction of incomes classification"""
+def predict(df_training, df_validation):
+    """Return prediction of incomes classification
+
+    Parameters:
+    ----------
+    df_training: pd.DataFrame
+        training df containing features and target 
+
+    df_validation: pd.DataFrame
+        validation df containing ONLY features.
+
+    Output:
+    ------
+    predictions: np.array (len(df_validation))
+    """
 
     cls = LogisticRegression() #define classifier
     features = df.drop(PREDICTION_COLNAME, axis=1)
     target = df[PREDICTION_COLNAME]
     cls.fit(features, target)
-    predictions = cls.predict(features)
+    predictions = cls.predict(df_validation)
     
     return predictions
 
