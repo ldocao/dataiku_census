@@ -2,16 +2,17 @@ import numpy as np
 import pandas as pd
 import load_data as ld
 import visualize
-
-
+import feature_engineering as feat
+from constants import *
+import ipdb
 
 def machine_learning(df, method="logistic_regression"):
     """Return dataframe with prediction"""
 
-    import logistic_regression as lr
+    import logistic_regression
 
     switcher ={
-            "logistic_regression": lr.predict(df)
+            "logistic_regression": logistic_regression.predict
             #SVM
             #random forest
             #neural network
