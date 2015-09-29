@@ -45,15 +45,21 @@ def print_score(y_true, y_valid):
     # (expected false, predicted true) (expected false, predicted false)
 
 
+
+
+
+
+
+
+
+
+
 ## LOAD DATA
 print "loading data..."
 df_train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
-df_train = feat.engineer_dataframe(df_train)
-
-###should make sure here that df_valid has the same features than the training set
 df_valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
-df_valid = df_valid[["age", "education", "sex", "num persons worked for employer", PREDICTION_COLNAME]]
-df_valid = feat.dummify(df_valid, "education") 
+df_train, df_valid = feat.engineer_dataframe(df_train, df_valid) #apply PCA here
+
 
 
 ## LEARNING
@@ -64,3 +70,18 @@ prediction = machine_learning(df_train, df_valid.drop(PREDICTION_COLNAME, axis=1
 print_score(df_valid[PREDICTION_COLNAME].values, prediction)
 
 #visualize.compare_results(prediction, validation)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

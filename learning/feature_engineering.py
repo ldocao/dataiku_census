@@ -88,7 +88,22 @@ def dummify_all_categorical(df):
 
 
 def select_by_pca(df, retain_ratio=0.99, plot_variance=True):
-    """Return the dataframe"""
+    """Return PCA matrix with fixed retain ratio, and PCA obj
+
+    Parameters:
+    ----------
+    df: pd.DataFrame
+
+    retain_ratio: float
+        keep components to reach this variance
+
+    plot_variance: boolean
+        display plot of variance explained as function of number of components
+
+    Output:
+    ------
+    pca_obj: PCA obj
+    """
 
     from sklearn.decomposition import PCA
 
@@ -106,10 +121,6 @@ def select_by_pca(df, retain_ratio=0.99, plot_variance=True):
         if(sum>=retain_ratio):
             break
 
-
-    if comp < min_comp: #take at least min_comp components
-        comp = min_comp
-
     print 'Number of selected components to retain: ', comp 
 
     if plot_variance:
@@ -118,27 +129,53 @@ def select_by_pca(df, retain_ratio=0.99, plot_variance=True):
 
     ## now take only the desired number of components
     pca_obj = PCA(n_components=comp)
-    #newdf = pca_obj.fit_transform(df)
-    X = pca_obj.fit_transform(df)   
-    newdf = pca_obj.inverse_transform(X) 
-    ##problem here I want to get back my df, should we use MDA ? Multiple Discriminant Analysis. http://sebastianraschka.com/Articles/2014_pca_step_by_step.html
-    ipdb.set_trace()
-    return newdf
+    return pca_obj
 
 
 
 
-def engineer_dataframe(df):
-    """Return a dataframe engineered for machine learning"""
+def _prepare_for_pca(df):
+    """Return df with bias sample and dummies
 
-    df = bias_population(df, 5.)
+    Parameters:
+    ----------
+    df: pd.DataFrame
+
+    Output:
+    ------
+    m: np.array
+        2D array [n_samples, n_components] which is the projected PCA matrix
+    """
+
+    df = bias_population(df, 7.)
     df = dummify_all_categorical(df)
-    df = select_by_pca(df.drop(PREDICTION_COLNAME, axis=1))
-
-
-    #df = drop_high_nan(df)
-
+    df.index = range(len(df))
     return df
+
+
+def engineer_dataframe(train, valid):
+    """Return df after performing PCA"""
+
+    ## bias sample and dummies
+    train = _prepare_for_pca(train)
+    valid = _prepare_for_pca(valid)
+
+
+    ## PCA OPERATION: the aim here is to create a PCA transformation from the training set, and to apply the same transformation onto the validation set, so as we can use the same prediction method later on.
+    features_train = train.drop(PREDICTION_COLNAME, axis=1) 
+    features_valid = valid.drop(PREDICTION_COLNAME, axis=1) 
+    pca_obj = select_by_pca(features_train) #compute PCA eigenvectors from training set
+
+    features_train = pca_obj.fit_transform(features_train) #compute the new features for training set
+    features_valid = pca_obj.fit_transform(features_valid) #apply the same pca transformation onto the validation set
+
+
+    ##clean up for output
+    features_train = pd.DataFrame(features_train)
+    features_valid = pd.DataFrame(features_valid)
+    train = pd.concat([features_train, train[PREDICTION_COLNAME]], axis=1)
+    valid = pd.concat([features_valid, valid[PREDICTION_COLNAME]], axis=1)    
+    return train, valid
 
 
 
