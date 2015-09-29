@@ -77,7 +77,7 @@ def dummify(df, colname):
 def engineer_dataframe(df):
     """Return a dataframe engineered for machine learning"""
 
-    df = bias_population(df, 1.)
+    df = bias_population(df, 5.)
     df = drop_high_nan(df)
 
     ## temporary sub selection
