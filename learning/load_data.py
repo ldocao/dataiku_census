@@ -78,7 +78,7 @@ def _set_to_unknown(df, list_words):
 
 
 def _clean(df):
-    """Return a cleaned version of data frame
+    """Return a cleaned version of data frame. Mostly binarize.
 
     """
 
