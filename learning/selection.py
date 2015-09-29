@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import utils
 from constants import *
+import ipdb
 
 def bias_population(df, ratio, seed=0):
     """Return a biased sample of the dataframe.
@@ -44,3 +45,14 @@ def bias_population(df, ratio, seed=0):
     df_false = utils.sample_random(df_false, n_rows_false, seed=seed)
 
     return pd.concat([df_true, df_false])
+
+
+
+def drop_high_nan(df, threshold=0.5):
+    """Drop columns if number of nan is greater than threshold"""
+    n_nans =  df.isnull().sum()
+    freq_nans = n_nans/float(len(df)) #in percentage
+    to_drop = (freq_nans > threshold).values
+    columns_drop = df.columns.values[to_drop].tolist()
+    df.drop(columns_drop, inplace=True, axis=1)
+    return df
