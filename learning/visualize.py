@@ -5,7 +5,7 @@ from constants import *
 import utils
 import matplotlib.pyplot as plt
 import ipdb
-
+import seaborn as sns
 
 
 
@@ -24,7 +24,7 @@ def _map_categorical(x):
     """
     alpha = np.unique(x) #x is any type
     num = pd.Series(range(len(alpha)), index=alpha) #numerical equivalent to set
-    return num.to_dict()
+    return num
 
 
 def _categorical_to_numerical(x):
@@ -38,32 +38,28 @@ def _categorical_to_numerical(x):
     ------
     result: pd.Series
     """
-    alpha = np.unique(x) #x is any type
-    num = pd.Series(range(len(alpha)), index=alpha) #numerical equivalent to set
-    ipdb.set_trace()
+
+    num = _map_categorical(x)
     return x.map(num)
 
 
 
-def scatter(x, y):
+def scatter(df, colx, coly):
     """Scatter plot for either numerical or categorical variables
 
     Parameters:
     ----------
-    x, y : pd.Series
+    df: pd.DataFrame
+
+    colx: string
+        name of x column in df to use for abcisse
+
+    coly : string
+        name of y column in df to use for ordinates
     """
 
-    if not x.is_numeric(): x = _categorical_to_numerical(x)
-    if not y.is_numeric(): y = _categorical_to_numerical(y)
-
-    df = pd.DataFrame()
-    df["x"] = x
-    df["y"] = y
-
     plt.figure()
-    pd.set_option('display.mpl_style', 'default')
-    ax = plt.axes()
-    df.plot(x='x', y='y', kind='scatter', ax=ax, alpha=0.6)
+    sns.stripplot(x=colx, y=coly, data=df);
     plt.show()
 
 
@@ -76,4 +72,3 @@ def scatter(x, y):
 
 
 
-    
