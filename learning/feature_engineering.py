@@ -81,7 +81,7 @@ def engineer_dataframe(df):
     df = drop_high_nan(df)
 
     ## temporary sub selection
-    df = df[["age", "education", "sex", "num persons worked for employer"]]
+    df = df[["age", "education", "sex", "num persons worked for employer", PREDICTION_COLNAME]]
 
     ##dummify
     df = dummify(df, "education")
