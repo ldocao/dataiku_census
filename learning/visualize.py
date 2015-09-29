@@ -66,8 +66,26 @@ def scatter(df, colx, coly, colhue):
     plt.show()
 
 
+def variance_explained(s, comp):
+    """Plot variance explained
 
+    Parameters:
+    ----------
+    s: np.array
+        variance explained per component, output of pca_obj.explained_variance_ratio_
 
+    comp: integer
+        number of retained components
+    """
+
+    y = 1. - np.cumsum(s)
+    plt.figure()
+    plt.loglog(y)
+    plt.xlabel("N components")
+    plt.ylabel("Variance explained")
+    plt.hlines(y[comp-1], 1, len(s), linewidth=1)
+    plt.xlim(1,len(s))
+    plt.show()
 
 
 

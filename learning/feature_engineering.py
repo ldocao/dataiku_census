@@ -4,6 +4,7 @@ import pandas as pd
 import utils
 from constants import *
 import ipdb
+import visualize
 
 def bias_population(df, ratio, seed=0):
     """Return a biased sample of the dataframe.
@@ -84,18 +85,59 @@ def dummify_all_categorical(df):
 
     return df
 
+
+
+def select_by_pca(df, retain_ratio=0.99, plot_variance=True):
+    """Return the dataframe"""
+
+    from sklearn.decomposition import PCA
+
+    ## make a first pass to get the variance as function of components
+    pca_obj = PCA()
+    min_comp = 10
+    df_trans = pca_obj.fit_transform(df) 
+    s = pca_obj.explained_variance_ratio_
+    sum=0.0
+    comp=0
+
+    for _ in s:
+        sum += _
+        comp += 1
+        if(sum>=retain_ratio):
+            break
+
+
+    if comp < min_comp: #take at least min_comp components
+        comp = min_comp
+
+    print 'Number of selected components to retain: ', comp 
+
+    if plot_variance:
+        visualize.variance_explained(s, comp)
+
+
+    ## now take only the desired number of components
+    pca_obj = PCA(n_components=comp)
+    #newdf = pca_obj.fit_transform(df)
+    X = pca_obj.fit_transform(df)   
+    newdf = pca_obj.inverse_transform(X) 
+    ##problem here I want to get back my df, should we use MDA ? Multiple Discriminant Analysis. http://sebastianraschka.com/Articles/2014_pca_step_by_step.html
+    ipdb.set_trace()
+    return newdf
+
+
+
+
 def engineer_dataframe(df):
     """Return a dataframe engineered for machine learning"""
 
     df = bias_population(df, 5.)
-    #df = dummify_all_categorical(df)
-    df = drop_high_nan(df)
+    df = dummify_all_categorical(df)
+    df = select_by_pca(df.drop(PREDICTION_COLNAME, axis=1))
 
-    ## temporary sub selection
-    df = df[["age", "education", "sex", "num persons worked for employer", PREDICTION_COLNAME]]
 
-    ##dummify
-    df = dummify(df, "education")
+    #df = drop_high_nan(df)
+
     return df
 
 
