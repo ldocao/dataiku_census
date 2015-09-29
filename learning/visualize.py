@@ -44,7 +44,7 @@ def _categorical_to_numerical(x):
 
 
 
-def scatter(df, colx, coly):
+def scatter(df, colx, coly, colhue):
     """Scatter plot for either numerical or categorical variables
 
     Parameters:
@@ -56,10 +56,13 @@ def scatter(df, colx, coly):
 
     coly : string
         name of y column in df to use for ordinates
+
+    colhue: string
+        name of column to use for color
     """
 
     plt.figure()
-    sns.stripplot(x=colx, y=coly, data=df);
+    sns.stripplot(x=colx, y=coly, hue=colhue, data=df);
     plt.show()
 
 
