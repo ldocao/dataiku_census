@@ -6,8 +6,11 @@ import feature_engineering as feat
 from constants import *
 import ipdb
 
-def machine_learning(df, method="logistic_regression"):
-    """Return dataframe with prediction"""
+def machine_learning(df_train, df_valid, method="logistic_regression"):
+    """Return dataframe with prediction
+
+
+    """
 
     import logistic_regression
 
@@ -19,7 +22,7 @@ def machine_learning(df, method="logistic_regression"):
     }
     
     func = switcher.get(method)
-    return func(df)
+    return func(df_train, df_valid)
 
 
 
@@ -27,11 +30,14 @@ def machine_learning(df, method="logistic_regression"):
 method = "logistic_regression"
 
 ## LOAD DATA
-df = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
-df = feat.engineer_dataframe(df)
+df_train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
+df_train = feat.engineer_dataframe(df_train)
+df_valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
+df_valid = feat.engineer_dataframe(df_valid)
+
 
 ## LEARNING
-prediction = machine_learning(df, method=method)
+prediction = machine_learning(df_train, df_valid.drop(PREDICTION_COLNAME), method=method)
 
 ## PLOT CONTROL
 #visualize.compare_results(prediction, validation)
