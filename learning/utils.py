@@ -42,4 +42,4 @@ def is_numeric(self):
     """Is pd.Series a numerical variable"""
     return self.dtypes in NUMERICS
 
-setattr(pd.Series, 'is_numeric', is_numeric)
+setattr(pd.Series, 'is_numeric', is_numeric) # add method to pd.Series
