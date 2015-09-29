@@ -12,6 +12,9 @@ def machine_learning(df, method="logistic_regression"):
 
     switcher ={
             "logistic_regression": lr.predict(df)
+            #SVM
+            #random forest
+            #neural network
     }
     
     func = switcher.get(method)
@@ -21,18 +24,13 @@ def machine_learning(df, method="logistic_regression"):
 
 ## PARAMETERS
 method = "logistic_regression"
-training_file = "../data/census_income_learn.csv"
-metadata_file = "../data/census_income_metadata.txt"
-validation_file = "../data/census_income_test.csv"
-
-
 
 ## LOAD DATA
-df = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
-validation = ld.prepare_dataframe(validation_file, metadata_file=metadata_file)
+df = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
+df = feat.engineer_dataframe(df)
 
 ## LEARNING
 prediction = machine_learning(df, method=method)
 
 ## PLOT CONTROL
-visualize.compare_results(prediction, validation)
+#visualize.compare_results(prediction, validation)
