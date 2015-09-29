@@ -64,7 +64,7 @@ def drop_high_nan(df, threshold=0.5):
 def engineer_dataframe(df):
     """Return a dataframe engineered for machine learning"""
 
-    df = bias_population(df, 0.5)
+    df = bias_population(df, 1.)
     df = drop_high_nan(df)
     
     return df
