@@ -105,7 +105,8 @@ def _clean(df):
 
 
 
-def prepare_dataframe(training_file, metadata_file=False, **kwargs):
+def prepare_dataframe(training_file, metadata_file=False,
+                      autoselect=True, **kwargs):
     """Return a data frame with cleaned column name
 
     Parameters:
@@ -115,6 +116,9 @@ def prepare_dataframe(training_file, metadata_file=False, **kwargs):
 
     metadata_file: string
         full path to metadata.txt file to generate column names in resulting dataframe
+
+    autoselect: boolean
+        automatically subselect rows and columns for learning
 
     kwargs: 
         optional keywords for read_csv
@@ -133,6 +137,10 @@ def prepare_dataframe(training_file, metadata_file=False, **kwargs):
     ## clean up
     df = _remove_leading_space(df)
     df = _clean(df)
+
+    if autoselect:
+        df = sel.bias_population(df)
+        df = sel.drop_high_nan(df)
 
     return df
 
