@@ -58,7 +58,20 @@ def drop_high_nan(df, threshold=0.5):
     return df
 
 
+def dummify(df, colname):
+    """Return a dataframe in which colname has been dummified
 
+    Parameters:
+    ----------
+    df: pd.DataFrame
+
+    colname: string
+        name of column in df to be dummify
+    """
+
+    dummies = pd.get_dummies(df[colname])
+    df.drop(colname, inplace=True, axis=1)
+    return pd.concat([df, dummies], axis=1)
 
 
 def engineer_dataframe(df):
@@ -69,6 +82,11 @@ def engineer_dataframe(df):
 
     ## temporary sub selection
     df = df[["age", "education", "sex", "num persons worked for employer"]]
+
+    ##dummify
+    df = dummify(df, "education")
+
+    ##be careful here to remove one column in order to avoid collinearity
     return df
 
 
