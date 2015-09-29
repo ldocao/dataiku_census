@@ -70,6 +70,7 @@ def dummify(df, colname):
     """
 
     dummies = pd.get_dummies(df[colname])
+    dummies.drop(dummies.columns[0], axis=1, inplace=True) #remove arbitrarely the first column to avoid colinearity problem
     df.drop(colname, inplace=True, axis=1)
     return pd.concat([df, dummies], axis=1)
 
@@ -85,8 +86,6 @@ def engineer_dataframe(df):
 
     ##dummify
     df = dummify(df, "education")
-
-    ##be careful here to remove one column in order to avoid collinearity
     return df
 
 

@@ -11,9 +11,15 @@ import ipdb
 
 
 def machine_learning(df_train, df_valid, method=METHOD):
-    """Return dataframe with prediction
+    """Return dataframe with prediction 
 
+    Parameters:
+    ----------
+    df_train: pd.DataFrame
+        training df containing features and target 
 
+    df_valid: pd.DataFrame
+        validation df containing ONLY features.
     """
 
     import logistic_regression
@@ -25,7 +31,7 @@ def machine_learning(df_train, df_valid, method=METHOD):
             #neural network
     }
     
-    func = switcher.get(method)
+    func = switcher.get(METHOD)
     return func(df_train, df_valid)
 
 
@@ -52,8 +58,8 @@ n_valid = len(df_valid)
 
 
 ## LEARNING
-print "training: "+method+" ..."
-prediction = machine_learning(df_train, df_valid.drop(PREDICTION_COLNAME, axis=1), method=method)
+print "training: "+METHOD+" ..."
+prediction = machine_learning(df_train, df_valid.drop(PREDICTION_COLNAME, axis=1), method=METHOD)
 
 ## MEASURE OF SUCCESS, PLOT CONTROL
 print_score(df_valid[PREDICTION_COLNAME].values, prediction)
