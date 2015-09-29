@@ -10,11 +10,6 @@ from constants import *
 def predict(df):
     """Return prediction of incomes classification"""
 
-    ## load data
-    df = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
-    df = feat.engineer_dataframe(df)
-
-    ## machine learning: logistic regression
     cls = LogisticRegression() #define classifier
     features = df.drop(PREDICTION_COLNAME, axis=1)
     target = df[PREDICTION_COLNAME]
