@@ -105,8 +105,7 @@ def _clean(df):
 
 
 
-def prepare_dataframe(training_file, metadata_file=False,
-                      autoselect=True, **kwargs):
+def prepare_dataframe(training_file, metadata_file=False, **kwargs):
     """Return a data frame with cleaned column name
 
     Parameters:
@@ -138,11 +137,11 @@ def prepare_dataframe(training_file, metadata_file=False,
     df = _remove_leading_space(df)
     df = _clean(df)
 
-    if autoselect:
-        df = sel.bias_population(df)
-        df = sel.drop_high_nan(df)
-
     return df
+
+
+
+
 
 
 
