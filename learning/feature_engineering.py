@@ -66,5 +66,12 @@ def engineer_dataframe(df):
 
     df = bias_population(df, 1.)
     df = drop_high_nan(df)
-    
+
+    ## temporary sub selection
+    df = df[["age", "education", "sex", "num persons worked for employer"]]
     return df
+
+
+
+
+
