@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 import load_data as ld
+from constants import *
 import visualize
 import utils
+import selector
 import feature_engineering as feat
-from constants import *
+
 import ipdb
 
 
@@ -41,23 +43,22 @@ target_valid = valid[PREDICTION_COLNAME]
 
 
 
-from sklearn.feature_selection import VarianceThreshold
-variance_threshold=0.01
-selector = VarianceThreshold(threshold=variance_threshold)
-selector.fit(features_train)
-variances = selector.variances_
-dropped_features = features_train.columns.values[variances < variance_threshold] #name of features to drop
-features_train.drop(dropped_features, axis=1, inplace=True)
-features_valid.drop(dropped_features, axis=1, inplace=True)
+## SELECT FEATURES
+### this is supposed to be step1 in sklearn pipeline, but pipeline bugs with python-2.7
+print "selecting features..."
+features_train, features_valid = selector.reduce_dimension(features_train, features_valid)
 
 
 
 
-
-
+### LEARN 
+print "learning parameters..."
 from sklearn.linear_model import LogisticRegression
 cls = LogisticRegression()
 cls.fit(features_train, target_train)
+
+### PREDICT
+print "predicting target..."
 prediction = cls.predict(features_valid)
 
 
