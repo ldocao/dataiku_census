@@ -6,6 +6,7 @@ from constants import *
 import ipdb
 import visualize
 
+
 def bias_population(df, ratio, seed=0):
     """Return a biased sample of the dataframe.
 
@@ -67,7 +68,7 @@ def dummify(df, colname):
     df: pd.DataFrame
 
     colname: string
-        name of column in df to be dummify
+        name of column in df to be dummify. cannot be a list
     """
 
     dummies = pd.get_dummies(df[colname])
@@ -81,101 +82,20 @@ def dummify_all_categorical(df):
     """Return a dataframe where every categorical variables have been dummified"""
 
     df = pd.get_dummies(df)
-    df = dummify(df, ["detailed industry recode", "detailed occupation recode"]) ## add some variables that are encoded as int64 byt that are in fact categorical
-
+    df = dummify(df, "detailed industry recode")
+    df = dummify(df, "detailed occupation recode") ## add some variables that are encoded as int64 but that are in fact categorical
     return df
 
 
+def engineer(train, valid):
+    """Apply some feature engineering on dataframes"""
+    train = dummify_all_categorical(train)
+    valid = dummify_all_categorical(valid)
+    train, valid = utils.common_columns(train, valid) #keep only common features
 
-def select_by_pca(df, retain_ratio=0.99, plot_variance=True):
-    """Return PCA matrix with fixed retain ratio, and PCA obj
-
-    Parameters:
-    ----------
-    df: pd.DataFrame
-
-    retain_ratio: float
-        keep components to reach this variance
-
-    plot_variance: boolean
-        display plot of variance explained as function of number of components
-
-    Output:
-    ------
-    pca_obj: PCA obj
-    """
-
-    from sklearn.decomposition import PCA
-
-    ## make a first pass to get the variance as function of components
-    pca_obj = PCA()
-    min_comp = 10
-    df_trans = pca_obj.fit_transform(df) 
-    s = pca_obj.explained_variance_ratio_
-    sum=0.0
-    comp=0
-
-    for _ in s:
-        sum += _
-        comp += 1
-        if(sum>=retain_ratio):
-            break
-
-    print 'Number of selected components to retain: ', comp 
-
-    if plot_variance:
-        visualize.variance_explained(s, comp)
-
-
-    ## now take only the desired number of components
-    pca_obj = PCA(n_components=comp)
-    return pca_obj
-
-
-
-
-def _prepare_for_pca(df):
-    """Return df with bias sample and dummies
-
-    Parameters:
-    ----------
-    df: pd.DataFrame
-
-    Output:
-    ------
-    m: np.array
-        2D array [n_samples, n_components] which is the projected PCA matrix
-    """
-
-    df = bias_population(df, 7.)
-    df = dummify_all_categorical(df)
-    df.index = range(len(df))
-    return df
-
-
-def engineer_dataframe(train, valid):
-    """Return df after performing PCA"""
-
-    ## bias sample and dummies
-    train = _prepare_for_pca(train)
-    valid = _prepare_for_pca(valid)
-
-
-    ## PCA OPERATION: the aim here is to create a PCA transformation from the training set, and to apply the same transformation onto the validation set, so as we can use the same prediction method later on.
-    features_train = train.drop(PREDICTION_COLNAME, axis=1) 
-    features_valid = valid.drop(PREDICTION_COLNAME, axis=1) 
-    pca_obj = select_by_pca(features_train) #compute PCA eigenvectors from training set
-
-    features_train = pca_obj.fit_transform(features_train) #compute the new features for training set
-    features_valid = pca_obj.fit_transform(features_valid) #apply the same pca transformation onto the validation set
-
-
-    ##clean up for output
-    features_train = pd.DataFrame(features_train)
-    features_valid = pd.DataFrame(features_valid)
-    train = pd.concat([features_train, train[PREDICTION_COLNAME]], axis=1)
-    valid = pd.concat([features_valid, valid[PREDICTION_COLNAME]], axis=1)    
     return train, valid
+
+
 
 
 

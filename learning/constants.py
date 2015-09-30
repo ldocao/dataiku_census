@@ -9,4 +9,5 @@ TRAINING_FILE = "../data/census_income_learn.csv"
 METADATA_FILE = "../data/census_income_metadata.txt"
 VALIDATION_FILE = "../data/census_income_test.csv" 
 
-METHOD = "logistic_regression"
+SELECTOR = "variance_threshold"
+CLASSIFIER = "logistic_regression"
