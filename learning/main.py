@@ -55,8 +55,15 @@ def predict(train, features_valid):
 
 ## LOAD DATA
 print "loading data..."
+### basic operation on load data
 train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
 valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
+
+### some feature engineering
+train = feat.dummify_all_categorical(train)
+valid = feat.dummify_all_categorical(valid)
+
+### shortcuts
 features_valid = valid.drop(PREDICTION_COLNAME, axis=1)
 target_valid = valid[PREDICTION_COLNAME].values
 
