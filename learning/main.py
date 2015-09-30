@@ -9,33 +9,8 @@ import ipdb
 
 
 
-def machine_learning(df_train, df_valid, method=METHOD):
-    """Return dataframe with prediction 
-
-    Parameters:
-    ----------
-    df_train: pd.DataFrame
-        training df containing features and target 
-
-    df_valid: pd.DataFrame
-        validation df containing ONLY features.
-    """
-
-    import logistic_regression
-
-    switcher ={
-            "logistic_regression": logistic_regression.predict
-            #SVM
-            #random forest
-            #neural network
-    }
-    
-    func = switcher.get(METHOD)
-    return func(df_train, df_valid)
-
-
-
 def print_score(y_true, y_valid):
+    """Display some score measurement"""
     confusion_score = confusion_matrix(y_true, y_valid)
     print confusion_score
     print "Score summary: ", round(float(np.trace(confusion_score))/len(y_valid), 3)*100., "%"
@@ -46,7 +21,32 @@ def print_score(y_true, y_valid):
 
 
 
+def predict(train, features_valid):
+    """Return prediction of validation from training set
 
+    Parameters:
+    ----------
+    train: pd.DataFrame
+        features and target of training set
+
+    features_valid: pd.DataFrame
+        features of validation set
+
+    Output:
+    ------
+    prediction: np.array [number of rows validation]
+    """
+
+    cls = Pipeline([
+        ('feature_selection', feat.choose_selecter(), #step 1 in pipeline
+        ('classification', feat.choose_classifier()) #step 2 in pipeline
+        ])
+
+    features_train = train.drop(PREDICTION_COLNAME, axis=1)
+    target_train = train[PREDICTION_COLNAME]
+    cls.fit(features_train, target_train) #train the classifier
+
+    return cls.predict(features_valid)
 
 
 
@@ -55,26 +55,26 @@ def print_score(y_true, y_valid):
 
 ## LOAD DATA
 print "loading data..."
-df_train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
-df_valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
+train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
+valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
+features_valid = valid.drop(PREDICTION_COLNAME, axis=1)
+target_valid = valid[PREDICTION_COLNAME].values
 
 
 
 
 
-clf = Pipeline([
-  ('feature_selection', LinearSVC(penalty="l1")),
-  ('classification', RandomForestClassifier())
-])
 
 
 
-## LEARNING
-print "training: "+METHOD+" ..."
-prediction = machine_learning(df_train, df_valid.drop(PREDICTION_COLNAME, axis=1), method=METHOD)
+## PREDICT
+print "predicting..."
+prediction = predict(train, features_valid)
+
+
 
 ## MEASURE OF SUCCESS, PLOT CONTROL
-print_score(df_valid[PREDICTION_COLNAME].values, prediction)
+print_score(target_valid, prediction)
 
 #visualize.compare_results(prediction, validation)
 
