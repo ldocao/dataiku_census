@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from constants import *
+
 
 
 
@@ -44,6 +44,8 @@ def variance_threshold(features_train, features_valid):
 def reduce_dimension(features_train, features_valid):
     """Call the suitable function to reduce dimensionality of datasets"""
 
+    from constants import SELECTOR
+    
     switcher ={
         "variance_threshold": variance_threshold,
         #PCA

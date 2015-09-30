@@ -5,6 +5,7 @@ from constants import *
 import visualize
 import utils
 import selector
+import classifier
 import feature_engineering as feat
 
 import ipdb
@@ -49,25 +50,13 @@ print "selecting features..."
 features_train, features_valid = selector.reduce_dimension(features_train, features_valid)
 
 
-
-
-### LEARN 
-print "learning parameters..."
-from sklearn.linear_model import LogisticRegression
-cls = LogisticRegression()
-cls.fit(features_train, target_train)
-
 ### PREDICT
-print "predicting target..."
-prediction = cls.predict(features_valid)
-
-
-
+print "learning parameters and predicting target..."
+prediction = classifier.predict(features_train, target_train, features_valid)
 
 
 ## MEASURE OF SUCCESS, PLOT CONTROL
 print_score(target_valid, prediction)
-
 #visualize.compare_results(prediction, validation)
 
 
