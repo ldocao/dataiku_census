@@ -62,11 +62,6 @@ target_valid = valid[PREDICTION_COLNAME].values
 
 
 
-
-
-
-
-
 ## PREDICT
 print "predicting..."
 prediction = predict(train, features_valid)
