@@ -6,6 +6,7 @@ from constants import *
 import ipdb
 import visualize
 
+
 def bias_population(df, ratio, seed=0):
     """Return a biased sample of the dataframe.
 
@@ -67,7 +68,7 @@ def dummify(df, colname):
     df: pd.DataFrame
 
     colname: string
-        name of column in df to be dummify
+        name of column in df to be dummify. cannot be a list
     """
 
     dummies = pd.get_dummies(df[colname])
@@ -81,25 +82,20 @@ def dummify_all_categorical(df):
     """Return a dataframe where every categorical variables have been dummified"""
 
     df = pd.get_dummies(df)
-    df = dummify(df, ["detailed industry recode", "detailed occupation recode"]) ## add some variables that are encoded as int64 but that are in fact categorical
-
+    df = dummify(df, "detailed industry recode")
+    df = dummify(df, "detailed occupation recode") ## add some variables that are encoded as int64 but that are in fact categorical
     return df
 
 
+def engineer(train, valid):
+    """Apply some feature engineering on dataframes"""
+    train = dummify_all_categorical(train)
+    valid = dummify_all_categorical(valid)
+    train, valid = utils.common_columns(train, valid) #keep only common features
+
+    return train, valid
 
 
-def choose_selecter(*args, **kwargs):
-    """Return the function to use to do feature selection"""
-
-    switcher ={
-            "variance_threshold": 
-            #SVM
-            #random forest
-            #neural network
-    }
-    
-    func = switcher.get(METHOD)
-    return func(df_train, df_valid)
 
 
 
