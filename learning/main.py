@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 import load_data as ld
 import visualize
+import utils
 import feature_engineering as feat
 from constants import *
 from sklearn.metrics import confusion_matrix
+from sklearn.pipeline import Pipeline
 import ipdb
 
 
@@ -21,35 +23,6 @@ def print_score(y_true, y_valid):
 
 
 
-def predict(train, features_valid):
-    """Return prediction of validation from training set
-
-    Parameters:
-    ----------
-    train: pd.DataFrame
-        features and target of training set
-
-    features_valid: pd.DataFrame
-        features of validation set
-
-    Output:
-    ------
-    prediction: np.array [number of rows validation]
-    """
-
-    cls = Pipeline([
-        ('feature_selection', feat.choose_selecter(), #step 1 in pipeline
-        ('classification', feat.choose_classifier()) #step 2 in pipeline
-        ])
-
-    features_train = train.drop(PREDICTION_COLNAME, axis=1)
-    target_train = train[PREDICTION_COLNAME]
-    cls.fit(features_train, target_train) #train the classifier
-
-    return cls.predict(features_valid)
-
-
-
 
 
 
@@ -58,20 +31,28 @@ print "loading data..."
 ### basic operation on load data
 train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
 valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
-
-### some feature engineering
-train = feat.dummify_all_categorical(train)
-valid = feat.dummify_all_categorical(valid)
+train, valid = feat.engineer(train,valid) #pre-process data
 
 ### shortcuts
+features_train = train.drop(PREDICTION_COLNAME, axis=1)
 features_valid = valid.drop(PREDICTION_COLNAME, axis=1)
 target_valid = valid[PREDICTION_COLNAME].values
 
 
 
-## PREDICT
-print "predicting..."
-prediction = predict(train, features_valid)
+
+
+
+
+
+from sklearn.linear_model import LogisticRegression
+cls = LogisticRegression()
+features_train = train.drop(PREDICTION_COLNAME, axis=1)
+target_train = train[PREDICTION_COLNAME]
+cls.fit(features_train, target_train)
+prediction = cls.predict(features_valid)
+
+
 
 
 
