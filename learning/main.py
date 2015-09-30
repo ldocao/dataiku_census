@@ -9,7 +9,6 @@ import ipdb
 
 
 
-
 def machine_learning(df_train, df_valid, method=METHOD):
     """Return dataframe with prediction 
 
@@ -41,8 +40,8 @@ def print_score(y_true, y_valid):
     print confusion_score
     print "Score summary: ", round(float(np.trace(confusion_score))/len(y_valid), 3)*100., "%"
     # read confusion matrix as follows:
-    # (expected true, predicted true) (expected true, predicted false)
-    # (expected false, predicted true) (expected false, predicted false)
+    # (expected false, predicted false) (expected false, predicted true)
+    # (expected true, predicted false) (expected true, predicted true)
 
 
 
@@ -58,7 +57,15 @@ def print_score(y_true, y_valid):
 print "loading data..."
 df_train = ld.prepare_dataframe(TRAINING_FILE, metadata_file=METADATA_FILE)
 df_valid = ld.prepare_dataframe(VALIDATION_FILE, metadata_file=METADATA_FILE)
-df_train, df_valid = feat.engineer_dataframe(df_train, df_valid) #apply PCA here
+
+
+
+
+
+clf = Pipeline([
+  ('feature_selection', LinearSVC(penalty="l1")),
+  ('classification', RandomForestClassifier())
+])
 
 
 
