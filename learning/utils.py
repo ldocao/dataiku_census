@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 from constants import *
+import ipdb
 
 def replace_character(serie, c, r):
     """Return the same dataframe where "c" is replaced by "r" in colname
@@ -43,3 +44,35 @@ def is_numeric(self):
     return self.dtypes in NUMERICS
 
 setattr(pd.Series, 'is_numeric', is_numeric) # add method to pd.Series
+
+
+def common_columns(df1,df2):
+    """Return the common columns between df1 and df2
+
+    Parameters:
+    ----------
+    df1, df2: pd.DataFrame
+    """
+
+    set1 = set(df1.columns.values)
+    set2 = set(df2.columns.values)
+    unique_col = list(set1 ^ set2)
+
+    for c in unique_col:
+        if c in df1.columns:
+            df1.drop(c, inplace=True, axis=1)
+        else:
+            df2.drop(c, inplace=True, axis=1)
+
+    return df1, df2
+        
+
+
+
+
+
+
+
+
+
+
