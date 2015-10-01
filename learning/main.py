@@ -20,6 +20,7 @@ def print_score(y_true, y_valid):
     print confusion_score
     print "Score summary: ", round(float(np.trace(confusion_score))/len(y_valid), 3)*100., "%"
     # read confusion matrix as follows:
+    # true = earn 50000+
     # (expected false, predicted false) (expected false, predicted true)
     # (expected true, predicted false) (expected true, predicted true)
 

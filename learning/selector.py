@@ -40,6 +40,10 @@ def variance_threshold(features_train, features_valid):
 
 
 
+def identity(features_train, features_valid):
+    return features_train, features_valid
+
+
 
 def reduce_dimension(features_train, features_valid):
     """Call the suitable function to reduce dimensionality of datasets"""
@@ -48,8 +52,10 @@ def reduce_dimension(features_train, features_valid):
     
     switcher ={
         "variance_threshold": variance_threshold,
+        "none": identity
         #PCA
     }
-    
+
+    print "SELECTOR: ", SELECTOR
     func = switcher.get(SELECTOR)
     return func(features_train, features_valid)
