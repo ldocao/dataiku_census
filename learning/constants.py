@@ -10,4 +10,4 @@ METADATA_FILE = "../data/census_income_metadata.txt"
 VALIDATION_FILE = "../data/census_income_test.csv" 
 
 SELECTOR = "variance_threshold"
-CLASSIFIER = "logistic_regression"
+CLASSIFIER = "random_forest"
