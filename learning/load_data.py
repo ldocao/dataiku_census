@@ -16,8 +16,9 @@ def generate_colname(metadata_file):
         full path to metadata.txt file
 
     Output:
+    -------
     colnames: list
-        list of names (and associated code) for training dataframe column
+        list of names for training dataframe column
     """
 
     metadata = pd.read_csv(metadata_file, comment="|", sep=":", names=["names","values"])
