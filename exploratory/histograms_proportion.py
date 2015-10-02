@@ -45,7 +45,7 @@ for c in df.columns.values:
         false_counts = counts.get_group(False)
         true_counts = counts.get_group(True)
         plt.hist([false_counts,true_counts],
-                  stacked=True, color=["r","g"],
+                  stacked=True, color=["b","g"],
                   bins=100,normed=True)
         print "numerical: ",c
     else:
@@ -55,4 +55,3 @@ for c in df.columns.values:
     plt.suptitle(c)
     plt.tight_layout()
     plt.savefig("./figures/histograms_proportion/"+c+".pdf")
-    ipdb.set_trace()
