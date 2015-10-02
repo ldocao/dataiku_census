@@ -4,15 +4,11 @@ import load_data as ld
 import ipdb
 import matplotlib.pyplot as plt
 from constants import PREDICTION_COLNAME
+import utils
 
 training_file = "../data/census_income_learn.csv"
 metadata_file = "../data/census_income_metadata.txt"
-df = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
-colnames = df.columns.values
-is_categorical = [nps.is_numeric() for s in df]
 
-df_true = df[df[PREDICTION_COLNAME].values]
-df_false = df[df[PREDICTION_COLNAME].values == False]
 
 
 
@@ -29,8 +25,33 @@ def unique_elements(list_a, list_b):
 
 
 
-for c in colnames:
+
+
+
+
+
+
+df = ld.prepare_dataframe(training_file, metadata_file=metadata_file)
+nrows = len(df)
+colnames = df.columns.values
+
+
+is_categorical = np.array([not df[c].is_numeric() for c in colnames])
+categorical_variables = list(colnames[is_categorical])
+n_nans = df.isnull().sum() #print number of nan per columns
+print n_nans/float(nrows) #frequency on NaN
+
+
+df_true = df[df[PREDICTION_COLNAME].values]
+df_false = df[df[PREDICTION_COLNAME].values == False]
+
+
+
+
+compared_colnames = categorical_variables.append("age")
+for c in categorical_variables:
     unique_true, unique_false = unique_elements(df_true[c].values, df_false[c].values)
-    print "======", c
-    print unique_true
+    print "======", c.upper()
     print unique_false
+    print unique_true
+
